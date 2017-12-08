@@ -1,13 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<head>
+    <title>
+        {% block title %}
+          
+        {% endblock %}
+    </title>
+
+    {% block stylesheets %}
+
+        <scrip>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.css">
+        </scrip>
+    {% endblock %}
+</head>
+
+<body>
+    {% block menu %}
+        <div class="ui secondary pointing teal menu">
+            <div class="left menu">Galerie Photo</div>
+            <div class="right menu">
+                <div class="ui item"> 
+                    <i class="shutdown icon"></i>Connexion{# {{ app.user.username }} #}
+                
+             {#    <a href="{{ path('logout') }} "class="ui item"> #}
+                    <i class="user icon"></i> Inscription
+                    </div>
+                </a>
+            </div>
+        </div>
+    {% endblock %}
+
+    <div class="ui grid">
+    
+        <div class="one wide column"></div>
+        {% block left %}
+            Liste des utilisateurs
+        {% endblock %}
+
+
+        {% block wrapper %}
+            <div class="ten wide column">
+                <div class="article">
+                    {% block content %}
+                        {% block body %}{% endblock %}
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+
+       {#  {% block right %}{% endblock %} #}
+    </div>
+
+    {% block footer %}{% endblock %}
+</body>
+
+{% block javascripts %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.js"></script>
+     
+{% endblock %}
 </html>
