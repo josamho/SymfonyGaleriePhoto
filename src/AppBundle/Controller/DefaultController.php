@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity\User;
+use AppBundle\Form\InscriptionType;
 
 class DefaultController extends Controller
 {
@@ -13,8 +15,20 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('accueil/accueil.html.twig');
+        
+    	$user = new User();
+
+    	$form = $this->createForm(InscriptionType::class, $user);
+
+    	if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+
+    		var_dump('ok'); exit;
+
+    	}
+
+
+
+        return $this->render('accueil/accueil.html.twig', array('form' => $form->createView(),));
     }
 
 

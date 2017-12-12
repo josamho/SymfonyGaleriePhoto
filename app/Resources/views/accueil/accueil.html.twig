@@ -2,7 +2,59 @@
 
 
 
+ {% block left %}
+    Liste des utilisateurs        
+ 	
+
+ {% endblock %}
+
+
  {% block body %}
 
 Bienvenue
- {% endblock %}
+
+
+{{form_start(form)}}
+
+
+
+{{form_end(form)}}
+
+
+<div class="ui modal" id="inscription_modal">
+  <i class="close icon"></i>
+  <div class="header">
+    Inscription
+  </div>
+  <div class="content">
+
+  </div>
+  <div class="actions">
+    <div class="ui black deny button">
+      Annuler
+    </div>
+    <div class="ui positive right labeled icon button">
+      Valider
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+	$('#inscription').click(function(){
+		$('.ui.modal')
+	  		.modal('show')
+		;
+	})
+});	
+
+</script>
+
+{% endblock %}

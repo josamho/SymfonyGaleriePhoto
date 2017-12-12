@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>
+    <title>s
         {% block title %}
           
         {% endblock %}
@@ -21,23 +21,25 @@
             <div class="left menu">Galerie Photo</div>
             <div class="right menu">
                 <div class="ui item"> 
-                    <i class="shutdown icon"></i>Connexion{# {{ app.user.username }} #}
-                
+                    {#  truc de connexion #}
+                    <button class="ui olive button"><i class="shutdown icon"></i>Connexion{# {{ app.user.username }} #}</button>
+                    <span style=" width:10px;"></span>
              {#    <a href="{{ path('logout') }} "class="ui item"> #}
-                    <i class="user icon"></i> Inscription
-                    </div>
-                </a>
+                    <button class="ui olive button" id="inscription"><i class="user icon"></i> Inscription</button>
+                    
+                </div>
             </div>
         </div>
+
     {% endblock %}
 
     <div class="ui grid">
     
-        <div class="one wide column"></div>
+        <div class="two wide column">
         {% block left %}
-            Liste des utilisateurs
+            
         {% endblock %}
-
+        </div>
 
         {% block wrapper %}
             <div class="ten wide column">
@@ -58,8 +60,6 @@
 {% block javascripts %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.js"></script>
-     
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 {% endblock %}
 </html>
