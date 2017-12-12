@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 
-
+ 
  {% block left %}
     Liste des utilisateurs        
  	
@@ -14,11 +14,7 @@
 Bienvenue
 
 
-{{form_start(form)}}
 
-
-
-{{form_end(form)}}
 
 
 <div class="ui modal" id="inscription_modal">
@@ -27,16 +23,11 @@ Bienvenue
     Inscription
   </div>
   <div class="content">
+  		{{form_start(form)}}
 
-  </div>
-  <div class="actions">
-    <div class="ui black deny button">
-      Annuler
-    </div>
-    <div class="ui positive right labeled icon button">
-      Valider
-      <i class="checkmark icon"></i>
-    </div>
+
+
+		{{form_end(form)}}
   </div>
 </div>
 
@@ -44,7 +35,8 @@ Bienvenue
 
 
 {% block javascripts %}
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 
