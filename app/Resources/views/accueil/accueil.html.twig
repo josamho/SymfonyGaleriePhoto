@@ -1,6 +1,21 @@
 {% extends 'base.html.twig' %}
 
+{% block menu %}
+        <div class="ui secondary pointing teal menu">
+            <div class="left menu">Galerie Photo</div>
+            <div class="right menu">
+                <div class="ui item"> 
+                    {#  truc de connexion #}
+                    <button class="ui olive button"><i class="shutdown icon"></i>Connexion{# {{ app.user.username }} #}</button>
+                    <span style=" width:10px;"></span>
+             {#    <a href="{{ path('logout') }} "class="ui item"> #}
+                    <a href="{{ path('inscription') }} "><button class="ui olive button" id="inscription"><i class="user icon"></i> Inscription</button></a>
+                    
+                </div>
+            </div>
+        </div>
 
+{% endblock %}
  
  {% block left %}
     Liste des utilisateurs        
@@ -8,28 +23,11 @@
 
  {% endblock %}
 
-
+ 
  {% block body %}
 
 Bienvenue
 
-
-
-
-
-<div class="ui modal" id="inscription_modal">
-  <i class="close icon"></i>
-  <div class="header">
-    Inscription
-  </div>
-  <div class="content">
-  		{{form_start(form)}}
-
-
-
-		{{form_end(form)}}
-  </div>
-</div>
 
 {% endblock %}
 
@@ -37,16 +35,5 @@ Bienvenue
 {% block javascripts %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-
-	$('#inscription').click(function(){
-		$('.ui.modal')
-	  		.modal('show')
-		;
-	})
-});	
-
-</script>
 
 {% endblock %}

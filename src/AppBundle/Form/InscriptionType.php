@@ -5,7 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Gregwar\CaptchaBundle\Type\CaptchaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
@@ -13,10 +13,10 @@ class InscriptionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('age', TextType::class, array('label' => 'Age'))
-                ->add('captcha', CaptchaType::class)
+        $builder->add('age', IntegerType::class, array('label' => 'Age'))
+                ->add('captcha', CaptchaType::class, array('invalid_message' => "Captcha faux, veuillez recommencer", 'quality' => '100'))
                 ->remove('plainPassword')
-                ->add('submit', SubmitType::class);
+                ->add("Valider", SubmitType::class)
         ;
     }
 
