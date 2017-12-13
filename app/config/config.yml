@@ -62,10 +62,10 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: '%mailer_transport%'
-    host: '%mailer_host%'
-    username: '%mailer_user%'
-    password: '%mailer_password%'
+    transport: smtp
+    host: kopano.beware.fr
+    username: maintenance@beware.fr
+    password: PhcFZiJFKn7aAXe96tHvCX
     spool: { type: memory }
 
 fos_user:

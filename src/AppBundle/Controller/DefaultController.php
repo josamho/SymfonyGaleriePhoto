@@ -10,26 +10,14 @@ use AppBundle\Form\InscriptionType;
 
 class DefaultController extends Controller
 {
-	//generation du mot de passe
-	public function chaine_aleatoire($nb_car, $chaine = 'azertyuiopqsdfghjklmwxcvbn123456789')
-			{
-			    $nb_lettres = strlen($chaine) - 1;
-			    $generation = '';
-			    for($i=0; $i < $nb_car; $i++)
-			    {
-			        $pos = mt_rand(0, $nb_lettres);
-			        $car = $chaine[$pos];
-			        $generation .= $car;
-			    }
-			    return $generation;
-			}
-
+	
     /**
      * @Route("/", name="homepage")
      */
     public function indexAction(Request $request)
     {
         
+   
 	    return $this->render('accueil/accueil.html.twig');
     }
 
@@ -93,8 +81,9 @@ class DefaultController extends Controller
     		;
           	$this->get('mailer')->send($message);
 
+          	$request->getSession()->getFlashBag()->add('success', '<h3>Félicitation</h3><p>Un mail contenant votre mot de passe vient de vous être envoyé !<p>');
 
-    		// return $this->redirect('accueil/accueil.html.twig');
+    		return $this->redirectToRoute('homepage');
     	}
 
 
