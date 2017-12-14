@@ -27,6 +27,7 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
+        $this->addRole("ROLE_ADMIN");
         // your own logic
     }
 
@@ -53,4 +54,14 @@ class User extends BaseUser
     {
         return $this->age;
     }
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Group")
+     * @ORM\JoinTable(name="fos_user_user_group",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    protected $groups;
+
 }

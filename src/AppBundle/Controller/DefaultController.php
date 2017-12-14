@@ -51,15 +51,15 @@ class DefaultController extends Controller
 			        $car = $chaine[$pos];
 			        $mdp .= $car;
 			    }
-			    
-			// var_dump($mdp); exit;
-
-   			 $user->setPlainPassword($mdp);
+			 
+			 //lui donner un role user
+			$role = array('ROLE_USER');
  
-// $userManager->updateUser($user);
-    		// enregistrement en base
+			$user->addRole("ROLE_USER");   
 
-			$user->setPlainpassword($mdp);
+    		$user->setPlainpassword($mdp);
+
+    		// enregistrement en base
 			$em->persist($user);
 			$em->flush();
 
