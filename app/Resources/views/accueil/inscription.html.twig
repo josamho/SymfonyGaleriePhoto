@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div style="height:100px;"></div>
+<div class="ui segment">
+	
+		{{form_start(form, {'attr': {'class': 'ui form'}})}}
+		<div class="field">
+			{{form_row(form.email)}}
+		</div>
+		{{form_row(form.username)}}
+		{{form_row(form.age)}}
+		{{form_row(form.captcha)}}	
+		{{form_row(form.Valider)}}
+		{{form_end(form)}}
+	</div>
+{% endblock %}
+
+
+
+{% block javascripts %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
+<script type="text/javascript">
+
+</script>
+
+{% endblock %}

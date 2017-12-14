@@ -1,8 +1,51 @@
 {% extends 'base.html.twig' %}
 
+{% block menu %}
+        <div class="ui secondary pointing teal menu">
+            <div class="left menu">Galerie Photo</div>
+            <div class="right menu">
+                <div class="ui item"> 
+                    {#  truc de connexion #}
+                    <button class="ui olive button"><i class="shutdown icon"></i>Connexion{# {{ app.user.username }} #}</button>
+                    <span style=" width:10px;"></span>
+             {#    <a href="{{ path('logout') }} "class="ui item"> #}
+                    <a href="{{ path('inscription') }} "><button class="ui olive button" id="inscription"><i class="user icon"></i> Inscription</button></a>
+                    
+                </div>
+            </div>
+        </div>
 
+{% endblock %}
+ 
+ {% block left %}
+    Liste des utilisateurs        
+ 	
 
+ {% endblock %}
+
+ 
  {% block body %}
 
+   {% if app.session.flashbag.peekAll()|length %}
+    <div class="ui segment">
+                {% for label, flashes in app.session.flashbag.all %}
+                  {% for flash in flashes %}
+                    <div class="messages {{ label }}">
+                      <p>{{ flash|raw }}</p>
+                    </div>
+                  {% endfor %}
+                {% endfor %}   
+    </div>
+  {% endif %}
+
 Bienvenue
- {% endblock %}
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
+
+{% endblock %}
