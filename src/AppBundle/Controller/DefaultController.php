@@ -5,6 +5,9 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Security;
 use AppBundle\Entity\User;
 use AppBundle\Form\InscriptionType;
 
@@ -17,6 +20,21 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         
+        $session = $request->getSession();
+
+
+        if ($this->getUser() != NULL)
+        {
+            if ($session->has('tentative')){
+                $session->remove('tentative');
+            }         
+        } else {
+            if ($session->has('tentative')){
+                if ($session->get('tentative') == '0'){
+                    $session->remove('tentative');
+                }
+            }     
+        }
 
         $csrfToken = $this->has('security.csrf.token_manager')
             ? $this->get('security.csrf.token_manager')->getToken('authenticate')->getValue()
@@ -96,5 +114,129 @@ class DefaultController extends Controller
         return $this->render('accueil/inscription.html.twig', array('form' => $form->createView(),));
     }
 
+    /**
+     * @Route("/magalerie", name="magalerie")
+     */
+    public function maGalerieAction(Request $request)
+    {
+       
+        return $this->render('profil/galerie.html.twig');
+    }
+
+
+    /**
+     * @Route("/login", name="login")
+     */
+    public function loginAction(Request $request)
+    {
+        /** @var $session Session */
+        $session = $request->getSession();
+        $sessionbis = $this->get('session');
+        $email = $session->get('_security.last_username');
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('AppBundle:User')->findOneBy(array('email' => $email));
+        if ( $user != NULL){
+            $autorisation = $user->isEnabled();
+            if ($autorisation == 0){
+                $request->getSession()->getFlashBag()->add('error', "<h3>Vous ne pouvez plus vous connectez, l'admin a été contacté<p>");
+
+            } else { 
+            // $session->set('truc', 'truc');
+
+            // var_dump($session->get('_security.last_username'));
+            // var_dump($session->all());
+            // var_dump($request);
+
+            if ($sessionbis->has('tentative')){
+                var_dump('y a session');
+                $tentative = $sessionbis->get('tentative');
+            } else {
+                $tentative = '3';
+                $sessionbis->set('tentative', $tentative);
+            }
+
+            $authErrorKey = Security::AUTHENTICATION_ERROR;
+            $lastUsernameKey = Security::LAST_USERNAME;
+
+            // get the error if any (works with forward and redirect -- see below)
+            if ($request->attributes->has($authErrorKey)) {
+                $error = $request->attributes->get($authErrorKey);
+
+                $tentative = $tentative -1;
+                if ($tentative == 0){
+                    $request->getSession()->getFlashBag()->add('error', "<h3>Vous ne pouvez plus vous connectez, l'admin a été contacté<p>");
+                    //bloquer le compte utilisateur
+                    $em = $this->getDoctrine()->getManager();
+                    $user = $em->getRepository('AppBundle:User')->findOneBy(array('email' => $email));
+                    if ( $user != NULL){
+                        $user->setEnabled(0);
+                        $em->persist($user);
+                        $em->flush();
+                    }  
+                } else {
+                $request->getSession()->getFlashBag()->add('error', '<h3>Attention</h3><p>plus que '.$tentative.'tentative(s) de connexion!<p>');
+                $sessionbis->set('tentative', $tentative);
+                
+                }
+
+            } elseif (null !== $session && $session->has($authErrorKey)) {
+                $error = $session->get($authErrorKey);
+                $session->remove($authErrorKey);
+
+                $tentative = $tentative -1;
+                if ($tentative == 0){
+                    $request->getSession()->getFlashBag()->add('error', "<h3>Vous ne pouvez plus vous connectez, l'admin a été contacté<p>");
+                    //bloquer le compte utilisateur
+                    $em = $this->getDoctrine()->getManager();
+                    $user = $em->getRepository('AppBundle:User')->findOneBy(array('email' => $email));
+                    if ( $user != NULL){
+                        $user->setEnabled(0);
+                        $em->persist($user);
+                        $em->flush();
+                    }            
+
+
+                } else {
+                $request->getSession()->getFlashBag()->add('error', '<h3>Attention</h3><p>plus que '.$tentative.' tentative(s) de connexion!<p>');
+                $sessionbis->set('tentative', $tentative);
+                
+                }
+
+
+            } else {
+                $error = null;
+                $sessionbis->remove('tentative');
+                // $request->getSession()->getFlashBag()->add('error', '<h3>Attention</h3><p>plus que'.$tentative.'!<p>');
+            }
+
+            if (!$error instanceof AuthenticationException) {
+                $error = null; // The value does not come from the security component.
+                
+        }
+
+        // last username entered by the user
+        $lastUsername = (null === $session) ? '' : $session->get($lastUsernameKey);
+
+        $csrfToken = $this->has('security.csrf.token_manager')
+            ? $this->get('security.csrf.token_manager')->getToken('authenticate')->getValue()
+            : null;
+
+
+        // var_dump('ok'); exit;
+           }
+
+           
+        } else {
+            $request->getSession()->getFlashBag()->add('error', "<h3>Veuillez vérifier l'email, l'utilisateur n'a pas été reconnu !<p>");
+        }
+        //Redirection
+        return $this->redirectToRoute('homepage');
+        /*return $this->renderLogin(array(
+            'last_username' => $lastUsername,
+            'error' => $error,
+            'csrf_token' => $csrfToken,
+        ));*/
+    }
 
 }
