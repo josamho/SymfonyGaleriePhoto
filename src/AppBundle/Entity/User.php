@@ -28,6 +28,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->addRole("ROLE_ADMIN");
+        $this->setEnabled("1");
         // your own logic
     }
 

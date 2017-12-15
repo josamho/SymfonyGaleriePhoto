@@ -17,8 +17,12 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         
+
+        $csrfToken = $this->has('security.csrf.token_manager')
+            ? $this->get('security.csrf.token_manager')->getToken('authenticate')->getValue()
+            : null;
    
-	    return $this->render('accueil/accueil.html.twig');
+	    return $this->render('accueil/accueil.html.twig', array('csrf_token' => $csrfToken));
     }
 
 
@@ -30,6 +34,8 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
     	// $user = new User();
+
+
 
     	$userManager = $this->get('fos_user.user_manager');
 		$user = $userManager->createUser();
@@ -53,11 +59,10 @@ class DefaultController extends Controller
 			    }
 			 
 			 //lui donner un role user
-			$role = array('ROLE_USER');
- 
 			$user->addRole("ROLE_USER");   
 
     		$user->setPlainpassword($mdp);
+    		
 
     		// enregistrement en base
 			$em->persist($user);
