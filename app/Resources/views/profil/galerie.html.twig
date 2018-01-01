@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block menu %}
+        <div class="ui secondary pointing teal menu">
+            <div class="left menu">Galerie Photo</div>
+            <div class="right menu">
+                <div class="ui item"> 
+                    {#  truc de connexion #}
+                    {% if app.user %}
+                        <a href="{{ path('homepage') }} "><button class="ui olive button" type="button" id="inscription"><i class="user icon"></i> Accueil</button> </a>
+                        <span style=" width:10px;"></span>
+                        <a href="{{ path('fos_user_security_logout') }} "><button class="ui red button" id="inscription"><i class="shutdown icon"></i> Déconnection</button></a>
+                    {% endif %}
+                   
+                    
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
+ 
+{% block left %}
+    Actions       
+ 	
+
+{% endblock %}
+
+ 
+{% block body %}
+
+{% endblock %}

@@ -6,10 +6,27 @@
             <div class="right menu">
                 <div class="ui item"> 
                     {#  truc de connexion #}
-                    <button class="ui olive button"><i class="shutdown icon"></i>Connexion{# {{ app.user.username }} #}</button>
+                    {% if app.user %}
+                    <a href="{{ path('magalerie') }} "><button class="ui olive button" type="button" id="inscription"><i class="user icon"></i> Ma galerie photo</button> </a>
                     <span style=" width:10px;"></span>
+                    <a href="{{ path('fos_user_security_logout') }} "><button class="ui red button" id="inscription"><i class="shutdown icon"></i> Déconnection</button></a>
+                    {% else %}
+                    <form action="login_check" method="post">
+                        <input type="hidden" name="_csrf_token" value="{{csrf_token}}">
+                        <span class="ui input">
+                        <input type="text" id="username" name="_username" class="form-control" required="required">
+                        <span>
+                        <span class="ui input">
+                        <input type="password" id="password" name="_password" class="form-control" required="required">
+                        </span>
+                        <input type="submit" class="ui olive button" value="Connexion">
+                    </form>
+                     <span style=" width:10px;"></span>
              {#    <a href="{{ path('logout') }} "class="ui item"> #}
-                    <a href="{{ path('inscription') }} "><button class="ui olive button" id="inscription"><i class="user icon"></i> Inscription</button></a>
+                    <a href="{{ path('inscription') }} "><button class="ui olive button" type="button" id="inscription"><i class="user icon"></i> Inscription</button></a>
+                    {# {{ app.user.username }} #}
+                    {% endif %}
+                   
                     
                 </div>
             </div>

@@ -24,10 +24,17 @@ class User extends BaseUser
     */
     protected $age;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="Photo", mappedBy="fos_user" ,cascade={"persist", "remove"})
+     */
+    private $photos;
+
     public function __construct()
     {
         parent::__construct();
         $this->addRole("ROLE_ADMIN");
+        $this->setEnabled("1");
         // your own logic
     }
 
