@@ -9,7 +9,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Photo;
 use AppBundle\Form\InscriptionType;
+use AppBundle\Form\PhotoType;
 
 class DefaultController extends Controller
 {
@@ -119,8 +121,32 @@ class DefaultController extends Controller
      */
     public function maGalerieAction(Request $request)
     {
-       
-        return $this->render('profil/galerie.html.twig');
+        $photo = new Photo;
+
+        $form = $this->get('form.factory')->create(PhotoType::class, $photo);  
+
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+
+          // $photo->upload();
+
+          $em = $this->getDoctrine()->getManager();
+          $photo->setPosition(0);
+          $date = new \DateTime("now");
+          $photo->setDatepublication($date);
+
+          $user = $this->getUser();
+
+          $em->persist($photo);
+          $photo->setUser($user);
+          $user->addPhoto($photo);
+          
+          $em->persist($user);
+          $em->flush();
+
+          $request->getSession()->getFlashBag()->add('notice', 'Photo bien ajoutée.');
+        }
+
+        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), ));
     }
 
 
@@ -237,6 +263,14 @@ class DefaultController extends Controller
             'error' => $error,
             'csrf_token' => $csrfToken,
         ));*/
+    }
+
+
+    /**
+     * @Route("/ajoutphoto", name="add_photo")
+     */
+     public function AjoutPhotoAction(Request $request)
+    {
     }
 
 }

@@ -7,12 +7,10 @@
                 <div class="ui item"> 
                     {#  truc de connexion #}
                     {% if app.user %}
-                        <a href="{{ path('homepage') }} "><button class="ui olive button" type="button" id="inscription"><i class="user icon"></i> Accueil</button> </a>
+                        <a href="{{ path('homepage') }} "><button class="ui olive button" type="button" id="homepage"><i class="user icon"></i> Accueil</button> </a>
                         <span style=" width:10px;"></span>
-                        <a href="{{ path('fos_user_security_logout') }} "><button class="ui red button" id="inscription"><i class="shutdown icon"></i> Déconnection</button></a>
-                    {% endif %}
-                   
-                    
+                        <a href="{{ path('fos_user_security_logout') }} "><button class="ui red button" id="deconnexion"><i class="shutdown icon"></i> Déconnection</button></a>
+                    {% endif %}                 
                 </div>
             </div>
         </div>
@@ -20,12 +18,40 @@
 {% endblock %}
  
 {% block left %}
-    Actions       
- 	
+    Actions   <br/>    
+ 	<button class="ui olive button" type="button" id="addphoto"><i class="plus icon"></i>Ajout photo</button>
 
 {% endblock %}
 
  
 {% block body %}
+
+
+    <div class="ui modal">
+        <div class="header">Ajout d'une photo</div>
+        <div class="content">
+            {{form_start(form)}}
+            {{form_end(form)}}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
+
+<script>
+
+$('#addphoto').click(function(){
+    $('.ui.modal')
+      .modal('show')
+    ;
+    // alert('click');
+
+});
+
+</script>
 
 {% endblock %}
