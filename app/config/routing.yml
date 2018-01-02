@@ -8,3 +8,7 @@ fos_user:
 fos_user_group:
     resource: "@FOSUserBundle/Resources/config/routing/group.xml"
     prefix: /group
+
+adminlogin:
+    path: /admin/login_check
+    defaults: { _controller: BrsLoginBundle:Login:loginCheck }
