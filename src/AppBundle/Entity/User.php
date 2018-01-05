@@ -26,7 +26,7 @@ class User extends BaseUser
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Photo", mappedBy="fos_user" ,cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Photo", mappedBy="user" ,cascade={"persist", "remove"})
      */
     private $photos;
 

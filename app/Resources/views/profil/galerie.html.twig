@@ -26,6 +26,17 @@
  
 {% block body %}
 
+    {% if app.session.flashbag.peekAll()|length %}
+    <div class="ui segment">
+                {% for label, flashes in app.session.flashbag.all %}
+                  {% for flash in flashes %}
+                    <div class="messages {{ label }}">
+                      <p>{{ flash|raw }}</p>
+                    </div>
+                  {% endfor %}
+                {% endfor %}   
+    </div>
+  {% endif %}
 
     <div class="ui modal">
         <div class="header">Ajout d'une photo</div>

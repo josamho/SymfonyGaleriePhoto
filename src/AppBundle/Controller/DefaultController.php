@@ -121,6 +121,7 @@ class DefaultController extends Controller
      */
     public function maGalerieAction(Request $request)
     {
+        //ajout photo
         $photo = new Photo;
 
         $form = $this->get('form.factory')->create(PhotoType::class, $photo);  
@@ -144,6 +145,8 @@ class DefaultController extends Controller
           $em->flush();
 
           $request->getSession()->getFlashBag()->add('notice', 'Photo bien ajoutée.');
+        } else {
+            $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
         }
 
         return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), ));
@@ -263,14 +266,6 @@ class DefaultController extends Controller
             'error' => $error,
             'csrf_token' => $csrfToken,
         ));*/
-    }
-
-
-    /**
-     * @Route("/ajoutphoto", name="add_photo")
-     */
-     public function AjoutPhotoAction(Request $request)
-    {
     }
 
 }

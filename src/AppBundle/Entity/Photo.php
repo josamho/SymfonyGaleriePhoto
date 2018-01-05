@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -57,6 +58,12 @@ class Photo
 
     /**
     * @var UploadedFile
+    *
+    * @Assert\File(
+    *     maxSize = "5M",
+    *     mimeTypes = {"image/png", "image/jpeg"},
+    *     mimeTypesMessage = "Fichier non valide !"
+    * )
     */
     private $file;
 
@@ -84,6 +91,8 @@ class Photo
         // Le nom du fichier est son id, on doit juste stocker également son extension
         $this->url = $this->file->guessExtension();
         $this->alt = $this->file->getClientOriginalName();
+        //sauvegarde la taille en octet
+        $this->taille = $this->file->getClientSize();
 
     }
 
@@ -135,7 +144,7 @@ class Photo
     return 'uploads/img';
   }
 
-  protected function getUploadRootDir()
+  public function getUploadRootDir()
   {
     // On retourne le chemin relatif vers l'image pour notre code PHP
     return __DIR__.'/../../../web/'.$this->getUploadDir(); 
