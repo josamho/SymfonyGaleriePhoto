@@ -40,6 +40,8 @@ security:
             pattern: ^/
             form_login:
                 provider: fos_userbundle
+                check_path: /login_check
+                login_path: /login
                 csrf_token_generator: security.csrf.token_manager
 
             logout:       true

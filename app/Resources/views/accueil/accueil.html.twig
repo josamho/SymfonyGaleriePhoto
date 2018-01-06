@@ -11,7 +11,7 @@
                     <span style=" width:10px;"></span>
                     <a href="{{ path('fos_user_security_logout') }} "><button class="ui red button" id="inscription"><i class="shutdown icon"></i> Déconnection</button></a>
                     {% else %}
-                    <form action="login_check" method="post">
+                    <form action="{{ path('fos_user_security_check') }}" method="post">
                         <input type="hidden" name="_csrf_token" value="{{csrf_token}}">
                         <span class="ui input">
                         <input type="text" id="username" name="_username" class="form-control" required="required">

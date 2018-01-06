@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -39,7 +40,7 @@ class Photo
     /**
     * @var integer
     *
-    * @ORM\Column(type="integer", options={"default":"0"})
+    * @ORM\Column(type="integer", options={"default":0})
     */
     private $position;
 
@@ -57,6 +58,12 @@ class Photo
 
     /**
     * @var UploadedFile
+    *
+    * @Assert\File(
+    *     maxSize = "5M",
+    *     mimeTypes = {"image/png", "image/jpeg"},
+    *     mimeTypesMessage = "Fichier non valide !"
+    * )
     */
     private $file;
 
@@ -64,21 +71,11 @@ class Photo
     // On ajoute cet attribut pour y stocker le nom du fichier temporairement
     private $tempFilename;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="photos" ,cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $destination;
-  
-   
-
-    public function __construct(Destination $destination = null)
-    {
-      // if ($destination !== null) {
-      //   $this->setDestination($destination);
-      // }
-    }
+    private $user;
 
     /**
     * @ORM\PrePersist()
@@ -88,46 +85,37 @@ class Photo
     {
         // Si jamais il n'y a pas de fichier (champ facultatif), on ne fait rien
         if (null === $this->file) {
-      return;
+          return;
         }
         
         // Le nom du fichier est son id, on doit juste stocker également son extension
-        // Pour faire propre, on devrait renommer cet attribut en « extension », plutôt que « url »
         $this->url = $this->file->guessExtension();
+        $this->alt = $this->file->getClientOriginalName();
+        //sauvegarde la taille en octet
+        $this->taille = $this->file->getClientSize();
 
-        //$echappe = array(".", " ", ",", "/", "!");
-        //$dest_encodee = str_replace($echappe, "_", $this->getDestination()->getLibelle());
-        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute
-        // $this->alt = $this->getPosition().'_'.$this->getDestination()->getLibelle().'.'.$this->url;
-//*******************        //$this->alt = $this->getPosition().'_'.$dest_encodee.'.'.$this->url;
-        //renomer la photo
     }
 
     /**
     * @ORM\PostPersist()
     * @ORM\PostUpdate()
     */
-    public function upload()
+     public function upload()
     {
-        // Si jamais il n'y a pas de fichier (champ facultatif), on ne fait rien
-        if (null === $this->file) {
-          return;
-        }
-        // Si on avait un ancien fichier (attribut tempFilename non null), on le supprime
-        if (null !== $this->tempFilename) {
-          $oldFile = $this->getUploadRootDir().'/'.$this->tempFilename;
-          if (file_exists($oldFile)) {
-          unlink($oldFile);
-          }
-        
-        }
-      //$this->alt = $this->id.'_'.$this->getDestination()->getLibelle().'.'.$this->url ;
-      // On déplace le fichier envoyé dans le répertoire de notre choix
-//*******       $this->file->move(
-//******        $this->getUploadRootDir(), // Le répertoire de destination
-//*******        $this->getPosition().'_'.$this->getDestination()->getLibelle().'.'.$this->url   // Le nom du fichier à créer, ici « id_dest.extension »
-//****      );
-  }
+      // Si jamais il n'y a pas de fichier (champ facultatif), on ne fait rien
+      if (null === $this->file) {
+        return;
+      }
+
+      // On récupère le nom original du fichier de l'internaute
+      // $name = $this->file->getClientOriginalName();
+      $this->setTaille(filesize($this->file));
+      $this->file->move(
+      $this->getUploadRootDir(), // Le répertoire de destination
+      $this->alt); // Le nom du fichier à créer, ici « id.extension »
+    }
+  
+
 
   /**
    * @ORM\PreRemove()
@@ -135,7 +123,7 @@ class Photo
   public function preRemoveUpload()
   {
     // On sauvegarde temporairement le nom du fichier, car il dépend de l'id
- //************** //  $this->tempFilename = $this->getUploadRootDir().'/'.$this->getPosition().'_'.$this->getDestination()->getLibelle().'.'.$this->url;
+    $this->tempFilename = $this->getUploadRootDir().'/'.$this->getPosition().'_'.$this->getDestination()->getLibelle().'.'.$this->url;
   }
 
   /**
@@ -153,19 +141,19 @@ class Photo
   public function getUploadDir()
   {
     // On retourne le chemin relatif vers l'image pour un navigateur (relatif au répertoire /web donc)
-  //**************  // return 'uploads/img/groupe/'.$this->getDestination()->getId();
-    //return 'uploads/img';
+    return 'uploads/img';
   }
 
-  protected function getUploadRootDir()
+  public function getUploadRootDir()
   {
     // On retourne le chemin relatif vers l'image pour notre code PHP
-    return __DIR__.'/../../../../web/'.$this->getUploadDir(); 
+    return __DIR__.'/../../../web/'.$this->getUploadDir(); 
   }
 
   public function getWebPath()
   {
-    return $this->getUploadDir().'/'.$this->getAlt();
+    // return $this->getUploadDir().'/'.$this->getAlt
+    return $this->getUploadDir().'/'.$this->getId().'.'.$this->getUrl();
   }
 
   /*
@@ -268,4 +256,76 @@ class Photo
         return $this->position;
     }
 
+
+    /**
+     * Set taille
+     *
+     * @param integer $taille
+     *
+     * @return Photo
+     */
+    public function setTaille($taille)
+    {
+        $this->taille = $taille;
+
+        return $this;
+    }
+
+    /**
+     * Get taille
+     *
+     * @return integer
+     */
+    public function getTaille()
+    {
+        return $this->taille;
+    }
+
+    /**
+     * Set datepublication
+     *
+     * @param \DateTime $datepublication
+     *
+     * @return Photo
+     */
+    public function setDatepublication($datepublication)
+    {
+        $this->datepublication = $datepublication;
+
+        return $this;
+    }
+
+    /**
+     * Get datepublication
+     *
+     * @return \DateTime
+     */
+    public function getDatepublication()
+    {
+        return $this->datepublication;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     *
+     * @return Photo
+     */
+    public function setUser(\AppBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

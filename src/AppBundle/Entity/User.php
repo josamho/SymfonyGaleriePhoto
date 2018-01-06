@@ -26,7 +26,7 @@ class User extends BaseUser
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Photo", mappedBy="fos_user" ,cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Photo", mappedBy="user" ,cascade={"persist", "remove"})
      */
     private $photos;
 
@@ -71,4 +71,40 @@ class User extends BaseUser
      */
     protected $groups;
 
+
+    /**
+     * Add photo
+     *
+     * @param \AppBundle\Entity\Photo $photo
+     *
+     * @return User
+     */
+    public function addPhoto(\AppBundle\Entity\Photo $photo)
+    {
+        $this->photos[] = $photo;
+
+        $photo->setUser($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \AppBundle\Entity\Photo $photo
+     */
+    public function removePhoto(\AppBundle\Entity\Photo $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
+    }
 }
