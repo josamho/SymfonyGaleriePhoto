@@ -1,50 +1,76 @@
 {% extends 'base.html.twig' %}
 
 {% block menu %}
-        <div class="ui secondary pointing teal menu">
-            <div class="left menu">Galerie Photo</div>
-            <div class="right menu">
-                <div class="ui item"> 
-                    {#  truc de connexion #}
-                    {% if app.user %}
-                        <a href="{{ path('homepage') }} "><button class="ui olive button" type="button" id="homepage"><i class="user icon"></i> Accueil</button> </a>
-                        <span style=" width:10px;"></span>
-                        <a href="{{ path('fos_user_security_logout') }} "><button class="ui red button" id="deconnexion"><i class="shutdown icon"></i> Déconnection</button></a>
-                    {% endif %}                 
-                </div>
-            </div>
-        </div>
+		<div class="ui secondary pointing teal menu">
+			<div class="left menu">Galerie Photo</div>
+			<div class="right menu">
+				<div class="ui item"> 
+					{#  truc de connexion #}
+					{% if app.user %}
+						<a href="{{ path('homepage') }} "><button class="ui olive button" type="button" id="homepage"><i class="user icon"></i> Accueil</button> </a>
+						<span style=" width:10px;"></span>
+						<a href="{{ path('fos_user_security_logout') }} "><button class="ui red button" id="deconnexion"><i class="shutdown icon"></i> Déconnection</button></a>
+					{% endif %}                 
+				</div>
+			</div>
+		</div>
 
 {% endblock %}
  
 {% block left %}
-    Actions   <br/>    
- 	<button class="ui olive button" type="button" id="addphoto"><i class="plus icon"></i>Ajout photo</button>
+	Actions   <br/>    
+	<button class="ui olive button" type="button" id="addphoto"><i class="plus icon"></i>Ajout photo</button>
 
 {% endblock %}
 
  
 {% block body %}
 
-    {% if app.session.flashbag.peekAll()|length %}
-    <div class="ui segment">
-                {% for label, flashes in app.session.flashbag.all %}
-                  {% for flash in flashes %}
-                    <div class="messages {{ label }}">
-                      <p>{{ flash|raw }}</p>
-                    </div>
-                  {% endfor %}
-                {% endfor %}   
-    </div>
+	{% if app.session.flashbag.peekAll()|length %}
+	<div class="ui segment">
+				{% for label, flashes in app.session.flashbag.all %}
+				  {% for flash in flashes %}
+					<div class="messages {{ label }}">
+					  <p>{{ flash|raw }}</p>
+					</div>
+				  {% endfor %}
+				{% endfor %}   
+	</div>
   {% endif %}
 
-    <div class="ui modal">
-        <div class="header">Ajout d'une photo</div>
-        <div class="content">
-            {{form_start(form)}}
-            {{form_end(form)}}
+	<div class="ui modal">
+		<div class="header">Ajout d'une photo</div>
+		<div class="content">
+			{{form_start(form)}}
+			{{form_end(form)}}
+		</div>
+	</div>
+
+	<h3>Ma galerie publique</h3>
+	<div class="ui four column grid">
+        <div class="row">
+    {% for photo in photos %}
+
+        <div class="column">
+            <img class="ui large image" src="{{ asset(photo.webPath) }}" />
         </div>
+    {% endfor %}
     </div>
+    {# <div class="row">
+		<div class="column">ppp</div>
+		<div class="column">ppp</div>
+		<div class="column">ppp</div>
+		<div class="column">ppp</div>
+    </div>
+    <div class="row">
+		<div class="column">ppp</div>
+		<div class="column">ppp</div>
+		<div class="column">ppp</div>
+		<div class="column">ppp</div>
+    </div> #}
+	</div>
+	<h3>Ma galerie perso</h3>
+
 
 {% endblock %}
 
@@ -56,10 +82,10 @@
 <script>
 
 $('#addphoto').click(function(){
-    $('.ui.modal')
-      .modal('show')
-    ;
-    // alert('click');
+	$('.ui.modal')
+	  .modal('show')
+	;
+	// alert('click');
 
 });
 

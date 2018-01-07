@@ -121,6 +121,17 @@ class DefaultController extends Controller
      */
     public function maGalerieAction(Request $request)
     {
+
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $this->getUser();
+        $idUser = $user->getId();
+
+        $photos = $em->getRepository('AppBundle:Photo')->findAll();
+        // var_dump($photos); exit;
+
+
         //ajout photo
         $photo = new Photo;
 
@@ -149,7 +160,7 @@ class DefaultController extends Controller
             $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
         }
 
-        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), ));
+        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos ));
     }
 
 

@@ -82,3 +82,9 @@ fos_user:
             type: AppBundle\Form\InscriptionType 
 
 gregwar_captcha: ~
+
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+    filters:
+        cssrewrite: ~
