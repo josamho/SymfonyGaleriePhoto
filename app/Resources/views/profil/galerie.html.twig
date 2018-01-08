@@ -49,28 +49,26 @@
 	<h3>Ma galerie publique</h3>
 	<div class="ui four column grid">
         <div class="row">
-    {% for photo in photos %}
-
-        <div class="column">
-            <img class="ui large image" src="{{ asset(photo.webPath) }}" />
+        {% for photo in photos %}
+            {% set taille = photo.taille|length %}
+            <div class="column" style="text-align: -webkit-center; height: 280px; margin-bottom: 10px;" data-position="{{photo.position}}">
+                <img class="ui large image" src="{{ asset(photo.webPath ) }}" style="width: auto; max-height: 240px;" />
+                <span style = "position: absolute; bottom: 20px; right: 75px;">{{photo.datepublication|date("d/m/Y, H:i") }}, {{photo.taille}} octets</span>
+                <button style = "position: absolute; bottom: 0; right: 200px;" id="{{photo.id}}">{% if photo.position == '0' %}Non Publiée{% else %}Publiée{% endif %}</button>
+                 <button style = "position: absolute; bottom: 0; right: 100px;" id="{{photo.id}}">Supprimer</button>
+            </div>
+        {% endfor %}
         </div>
-    {% endfor %}
     </div>
-    {# <div class="row">
-		<div class="column">ppp</div>
-		<div class="column">ppp</div>
-		<div class="column">ppp</div>
-		<div class="column">ppp</div>
-    </div>
-    <div class="row">
-		<div class="column">ppp</div>
-		<div class="column">ppp</div>
-		<div class="column">ppp</div>
-		<div class="column">ppp</div>
-    </div> #}
-	</div>
-	<h3>Ma galerie perso</h3>
 
+    <ul class="pagination">
+  {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+        {% for p in range(1, nbPages) %}
+            <li{% if p == page %} class="active"{% endif %}>
+                <a href="{{ path('magalerie', {'page': p}) }}">{{ p }}</a>
+            </li>
+        {% endfor %}
+    </ul>
 
 {% endblock %}
 

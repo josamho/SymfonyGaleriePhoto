@@ -117,9 +117,9 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/magalerie", name="magalerie")
+     * @Route("/magalerie/{page}", name="magalerie", requirements={"page" = "\d*"})
      */
-    public function maGalerieAction(Request $request)
+    public function maGalerieAction($page, Request $request)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -128,11 +128,23 @@ class DefaultController extends Controller
         $user = $this->getUser();
         $idUser = $user->getId();
 
-        $photos = $em->getRepository('AppBundle:Photo')->findAll();
+        // $photos = $em->getRepository('AppBundle:Photo')->findBy(array('user' => $user));
         // var_dump($photos); exit;
+        if ($page < 1) {
+            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+        }
 
+        $nbPerPage = 12;
 
-        //ajout photo
+        $photos = $em->getRepository('AppBundle:Photo')->findPhotoByUser($page, $nbPerPage, $idUser);
+
+        $nbPages = ceil(count($photos)/ $nbPerPage);
+
+        if ($page > $nbPages){
+            throw $this->createNotFoundException("La page".$page." n'existe pas.");
+        }
+
+        //***************** ajout photo ********************//
         $photo = new Photo;
 
         $form = $this->get('form.factory')->create(PhotoType::class, $photo);  
@@ -156,11 +168,11 @@ class DefaultController extends Controller
           $em->flush();
 
           $request->getSession()->getFlashBag()->add('notice', 'Photo bien ajoutée.');
-        } else {
-            $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
+        } else if ( !$form->handleRequest($request)->isValid()) {
+            // $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
         }
 
-        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos ));
+        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page));
     }
 
 
