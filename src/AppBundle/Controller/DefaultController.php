@@ -126,6 +126,7 @@ class DefaultController extends Controller
 
 
         $user = $this->getUser();
+
         $idUser = $user->getId();
 
         // $photos = $em->getRepository('AppBundle:Photo')->findBy(array('user' => $user));
@@ -137,7 +138,9 @@ class DefaultController extends Controller
         $nbPerPage = 12;
 
         $photos = $em->getRepository('AppBundle:Photo')->findPhotoByUser($page, $nbPerPage, $idUser);
-
+        //compter nombre photo publier et faire un tableau des chiffre de celle déjà publier +1
+        $nbPhotosPubliees = $em->getRepository('AppBundle:Photo')->findPhotoPubliee($idUser);
+        $nbP = $nbPhotosPubliees[1] + 1;
         $nbPages = ceil(count($photos)/ $nbPerPage);
 
         if ($page > $nbPages){
@@ -172,7 +175,7 @@ class DefaultController extends Controller
             // $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
         }
 
-        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page));
+        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP));
     }
 
 

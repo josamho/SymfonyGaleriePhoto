@@ -20,7 +20,7 @@ class PhotoRepository extends \Doctrine\ORM\EntityRepository
             ->join('p.user', 'u')
             ->where('u.id = :user')
             ->setParameter('user', $userid)
-            ->orderBy('p.position')
+            ->orderBy('p.position', 'desc')
             ->getQuery()
         ;
 
@@ -30,5 +30,20 @@ class PhotoRepository extends \Doctrine\ORM\EntityRepository
 
         return new Paginator($query, true);
         // return $qb->getQuery()->getResult();
+    }
+
+    public function findPhotoPubliee($userid)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('COUNT(p.position)') 
+            ->from('AppBundle:Photo', 'p')
+            ->join('p.user', 'u')
+            ->where('u.id = :user')
+            ->andwhere('p.position != 0')
+            ->setParameter('user', $userid)
+            ->orderBy('p.position','asc')
+        ;
+
+        return $qb->getQuery()->getSingleResult();
     }
 }

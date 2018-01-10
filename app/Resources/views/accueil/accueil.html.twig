@@ -35,6 +35,9 @@
 {% endblock %}
  
  {% block left %}
+    {% if app.user %}
+        Bienvenue {{ app.user.username }}<br/>
+    {% endif %}
     Liste des utilisateurs        
  	
 
