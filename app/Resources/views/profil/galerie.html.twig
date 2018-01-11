@@ -54,7 +54,7 @@
             <div class="column" style="text-align: -webkit-center; height: 280px; margin-bottom: 10px;" data-position="{{photo.position}}">
                 <img class="ui large image" src="{{ asset(photo.webPath ) }}" style="width: auto; max-height: 240px;" />
                 <span style = "position: absolute; bottom: 20px; right: 75px;">{{photo.datepublication|date("d/m/Y, H:i") }}, {{photo.taille}} octets</span>
-                <SELECT name="{{photo.id}}" style = "position: absolute; bottom: 0; right: 200px;" size="1">
+                <SELECT class="positionSelect" id="{{photo.id}}" name="{{photo.id}}" style = "position: absolute; bottom: 0; right: 200px;" size="1">
                     {% for i in 0..nbP %}
                         {% if photo.position == i %}
                             <OPTION selected>{{i}}
@@ -90,10 +90,62 @@
 
 $('#addphoto').click(function(){
 	$('.ui.modal')
-	  .modal('show')
-	;
+ .modal('show')
+ ;
 	// alert('click');
 
+});
+
+
+$('.positionSelect').change(function(){
+    var idphoto = this.id;
+    var positionphoto = $(this).val();
+    console.log($(this).val());
+    var page = {{page}};
+
+    // var route = Routing.generate('publication_photo');
+/*
+    $.ajax({
+        url: '{{ path("publication_photo") }}' , 
+        type: 'POST',
+        dataType : 'application/json',
+        // contentType: "application/json",
+        data: {idphoto: idphoto, positionphoto: positionphoto},
+        beforeSend : function(){
+        // console.log("chargement");
+        }
+    })
+    .done(function( response ) {
+        document.location.href = Routing.generate('magalerie', { page: page });
+        //changer de page
+        // console.log('done');
+    })
+    .fail(function(j, t, e) {
+        // console.error(e);
+        // console.log("error");
+    })
+    ;*/
+
+    $.ajax({
+                    url: '{{ path("publication_photo") }}',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {idphoto: idphoto, positionphoto: positionphoto},
+                    beforeSend : function(){
+                      console.log("chargement");
+                    }
+                })
+                .done(function( response ){
+                    console.log('update ok');
+                    // document.location.href = Routing.generate('magalerie', { page: page });
+                    document.location.reload(true);
+                })
+                .fail(function() {
+                /*console.log("error");*/
+                })
+                .always(function() { // qu'il y ait une erreur ou non
+                /*console.log("complete");*/
+                });
 });
 
 </script>

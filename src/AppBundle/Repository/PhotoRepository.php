@@ -46,4 +46,39 @@ class PhotoRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getSingleResult();
     }
+
+    public function findModifPosition($position, $idUser)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('p.id, p.position')
+                ->from('AppBundle:Photo', 'p')
+                ->join('p.user', 'u')
+                ->where('u.id = :user')
+                ->andwhere('p.position >= :position')
+                ->setParameter('user', $idUser)
+                ->setParameter('position', $position)
+                ->orderBy('p.position')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findModifDoublePosition($positionhaute, $positionbasse, $idUser)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('p.id, p.position')
+                ->from('AppBundle:Photo', 'p')
+                ->join('p.user', 'u')
+                ->where('u.id = :user')
+                ->andwhere('p.position > :positionbasse')
+                ->andwhere('p.position <= :positionhaute')
+                ->setParameter('user', $idUser)
+                ->setParameter('positionbasse', $positionbasse)
+                ->setParameter('positionhaute', $positionhaute)
+                ->orderBy('p.position')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
 }
