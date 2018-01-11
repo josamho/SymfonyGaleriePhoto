@@ -123,7 +123,7 @@ class Photo
   public function preRemoveUpload()
   {
     // On sauvegarde temporairement le nom du fichier, car il dépend de l'id
-    $this->tempFilename = $this->getUploadRootDir().'/'.$this->getPosition().'_'.$this->getDestination()->getLibelle().'.'.$this->url;
+    // $this->tempFilename = $this->getUploadRootDir().'/'.$this->getPosition().'_'.$this->getDestination()->getLibelle().'.'.$this->url;
   }
 
   /**
@@ -153,7 +153,7 @@ class Photo
   public function getWebPath()
   {
     // return $this->getUploadDir().'/'.$this->getAlt
-    return $this->getUploadDir().'/'.$this->getId().'.'.$this->getUrl();
+    return $this->getUploadDir().'/'.$this->getAlt();
   }
 
   /*

@@ -117,11 +117,37 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/magalerie", name="magalerie")
+     * @Route("/magalerie/{page}", name="magalerie", requirements={"page" = "\d*"})
      */
-    public function maGalerieAction(Request $request)
+    public function maGalerieAction($page, Request $request)
     {
-        //ajout photo
+
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $this->getUser();
+
+        $idUser = $user->getId();
+
+        // $photos = $em->getRepository('AppBundle:Photo')->findBy(array('user' => $user));
+        // var_dump($photos); exit;
+        if ($page < 1) {
+            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+        }
+
+        $nbPerPage = 12;
+
+        $photos = $em->getRepository('AppBundle:Photo')->findPhotoByUser($page, $nbPerPage, $idUser);
+        //compter nombre photo publier et faire un tableau des chiffre de celle déjà publier +1
+        $nbPhotosPubliees = $em->getRepository('AppBundle:Photo')->findPhotoPubliee($idUser);
+        $nbP = $nbPhotosPubliees[1] + 1;
+        $nbPages = ceil(count($photos)/ $nbPerPage);
+
+        if ($page > $nbPages){
+            throw $this->createNotFoundException("La page".$page." n'existe pas.");
+        }
+
+        //***************** ajout photo ********************//
         $photo = new Photo;
 
         $form = $this->get('form.factory')->create(PhotoType::class, $photo);  
@@ -145,11 +171,11 @@ class DefaultController extends Controller
           $em->flush();
 
           $request->getSession()->getFlashBag()->add('notice', 'Photo bien ajoutée.');
-        } else {
-            $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
+        } else if ( !$form->handleRequest($request)->isValid()) {
+            // $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
         }
 
-        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), ));
+        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP));
     }
 
 

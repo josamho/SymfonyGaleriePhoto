@@ -12,3 +12,6 @@ fos_user_group:
 adminlogin:
     path: /admin/login_check
     defaults: { _controller: BrsLoginBundle:Login:loginCheck }
+
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.yaml"
