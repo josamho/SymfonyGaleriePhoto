@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -177,6 +178,103 @@ class DefaultController extends Controller
 
         return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP));
     }
+
+
+    /**
+    * @Route("/publication/photo", name="publication_photo")
+    */
+    public function publicationAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $idUser = $user->getId();
+
+        $nbPhotosPubliees = $em->getRepository('AppBundle:Photo')->findPhotoPubliee($idUser);
+
+        $idphoto = $request->request->get('idphoto'); 
+        $positionphoto = $request->request->get('positionphoto');
+            // var_dump( $idphoto );
+            // var_dump( $positionphoto );
+
+        
+        //on récupére notre photo
+        $photo = $em->getRepository('AppBundle:Photo')->findOneBy(array('id' => $idphoto));
+        // var_dump( $photo );
+        //on compare sa position existante et la nouvelle souhaité pour traiter les cas
+        $positionExistante = $photo->getPosition();
+            if ($positionExistante == 0){
+                if ($positionphoto  > $nbPhotosPubliees[1] ){
+                    // var_dump('nouvelle publication');
+                    $photo->setPosition($positionphoto);
+
+                } else {
+                    $photosABouger = $em->getRepository('AppBundle:Photo')->findModifPosition($positionphoto, $idUser);
+                    // var_dump($photosABouger);
+                    foreach ($photosABouger as $p) {
+                        $entiteP = $em->getRepository('AppBundle:Photo')->find($p['id']);
+                        $newPosition = $p['position'] + 1;
+                        $entiteP->setPosition($newPosition);
+                        $em->persist($entiteP);
+                        $photo->setPosition($positionphoto);              
+                    }
+
+                }
+            } else if($positionExistante != 0 && $positionphoto == 0){
+                if ($positionExistante  == $nbPhotosPubliees[1] ){
+                    // var_dump('derniere publication');
+                    $photo->setPosition($positionphoto);
+                } else {
+                    $selectposition = $positionExistante + 1;
+                    $photosABouger = $em->getRepository('AppBundle:Photo')->findModifPosition($selectposition, $idUser);
+                    // var_dump($photosABouger);
+                    foreach ($photosABouger as $p) {
+                        $entiteP = $em->getRepository('AppBundle:Photo')->find($p['id']);
+                        $newPosition = $p['position'] - 1;
+                        $entiteP->setPosition($newPosition);
+                        $em->persist($entiteP);
+                        $photo->setPosition($positionphoto);
+                    }
+                }
+            } else if ($positionExistante != 0 && $positionphoto != 0){
+                if ($positionExistante  < $positionphoto ){
+                     $photosABouger = $em->getRepository('AppBundle:Photo')->findModifDoublePosition($positionphoto, $positionExistante, $idUser);
+                    foreach ($photosABouger as $p) {
+                        $entiteP = $em->getRepository('AppBundle:Photo')->find($p['id']);
+                        $newPosition = $p['position'] - 1;
+                        $entiteP->setPosition($newPosition);
+                        $em->persist($entiteP);
+                        $photo->setPosition($positionphoto);
+                    }
+                } else if ($positionExistante  > $positionphoto ){
+                    $poshaute = $positionExistante  - 1;
+                    $posbasse = $positionphoto  - 1;
+                    $photosABouger = $em->getRepository('AppBundle:Photo')->findModifDoublePosition($poshaute, $posbasse, $idUser);
+                    // var_dump($photosABouger);
+                    foreach ($photosABouger as $p) {
+                        $entiteP = $em->getRepository('AppBundle:Photo')->find($p['id']);
+                        $newPosition = $p['position'] + 1;
+                        $entiteP->setPosition($newPosition);
+                        $em->persist($entiteP);
+                        $photo->setPosition($positionphoto);
+                    }    
+                }
+            }
+            // exist;
+
+            //cas changement de position entre 2
+        
+        $em->persist($photo);
+        $em->flush();
+
+        // var_dump($photo);
+
+        // exit;
+        
+        return New JsonResponse('ok');
+    }
+
+
 
 
     /**
