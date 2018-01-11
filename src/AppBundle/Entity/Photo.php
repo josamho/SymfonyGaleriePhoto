@@ -72,7 +72,7 @@ class Photo
     private $tempFilename;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="photos" ,cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="photos" ,cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
