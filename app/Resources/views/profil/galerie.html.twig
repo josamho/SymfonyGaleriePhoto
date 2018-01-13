@@ -38,13 +38,34 @@
 	</div>
   {% endif %}
 
-	<div class="ui modal">
+	<div class="ui modal" id="ajout">
 		<div class="header">Ajout d'une photo</div>
 		<div class="content">
 			{{form_start(form)}}
 			{{form_end(form)}}
 		</div>
 	</div>
+    {% for photo in photos %}
+    <div class="ui basic modal" id="suppresion{{photo.id}}">
+      <div class="ui icon header">
+        <i class="trash icon"></i>
+        Supprimer la photo
+      </div>
+      <div class="content">
+        <p style="text-align: center;">Voulez vous vraiment supprimer cette photo ?</p>
+      </div>
+      <div class="actions">
+        <div class="ui red basic cancel inverted button">
+          <i class="remove icon"></i>
+          Non
+        </div>
+        <a href="{{path('supression_photo', {'id': photo.id})}}"><div class="ui green ok inverted button" id="suppression">
+          <i class="checkmark icon"></i>
+          Oui
+        </div></a>
+      </div>
+    </div>
+    {% endfor %}
 
 	<h3>Ma galerie publique</h3>
 	<div class="ui four column grid">
@@ -64,7 +85,7 @@
                     {% endfor %}
                 </SELECT>
                 {# <button style = "position: absolute; bottom: 0; right: 200px;" id="{{photo.id}}">{% if photo.position == '0' %}Non Publiée{% else %}Publiée{% endif %}</button> #}
-                 <button style = "position: absolute; bottom: 0; right: 100px;" id="{{photo.id}}">Supprimer</button>
+                 <button style = "position: absolute; bottom: 0; right: 100px;" class="buttonSuppression" id="{{photo.id}}">Supprimer</button>
             </div>
         {% endfor %}
         </div>
@@ -88,13 +109,26 @@
 
 <script>
 
+
+
 $('#addphoto').click(function(){
-	$('.ui.modal')
+	$('.ui.modal#ajout')
  .modal('show')
  ;
 	// alert('click');
 
 });
+
+$('.buttonSuppression').click(function(){
+    $('#suppresion'+this.id)
+    .modal('show');
+
+    var idphoto = this.id;
+});
+
+$('#suppresion').click(function(){
+  
+})
 
 
 $('.positionSelect').change(function(){
@@ -116,7 +150,7 @@ $('.positionSelect').change(function(){
         }
     })
     .done(function( response ) {
-        document.location.href = Routing.generate('magalerie', { page: page });
+        document.location.href = Routing.generate('magalerie', { 'page': page });
         //changer de page
         // console.log('done');
     })

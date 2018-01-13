@@ -117,6 +117,7 @@ class DefaultController extends Controller
         return $this->render('accueil/inscription.html.twig', array('form' => $form->createView(),));
     }
 
+
     /**
      * @Route("/magalerie/{page}", name="magalerie", requirements={"page" = "\d*"})
      */
@@ -145,7 +146,9 @@ class DefaultController extends Controller
         $nbPages = ceil(count($photos)/ $nbPerPage);
 
         if ($page > $nbPages){
-            throw $this->createNotFoundException("La page".$page." n'existe pas.");
+            // throw $this->createNotFoundException("La page".$page." n'existe pas.");
+            $nbPages = 1;
+
         }
 
         //***************** ajout photo ********************//
@@ -172,6 +175,9 @@ class DefaultController extends Controller
           $em->flush();
 
           $request->getSession()->getFlashBag()->add('notice', 'Photo bien ajoutée.');
+
+          return $this->redirectToRoute('magalerie', array('page' => 1)); 
+
         } else if ( !$form->handleRequest($request)->isValid()) {
             // $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
         }
@@ -267,14 +273,46 @@ class DefaultController extends Controller
         $em->persist($photo);
         $em->flush();
 
-        // var_dump($photo);
 
-        // exit;
-        
         return New JsonResponse('ok');
     }
 
+    /**
+    * @Route("/suppression/photo/{id}", name="supression_photo", requirements={"id" = "\d*"})
+    */
+    public function suppresionAction($id, Request $request)
+    {
+            $em = $this->getDoctrine()->getManager();
+            $user = $this->getUser();
 
+            $idUser = $user->getId();
+
+            $nbPhotosPubliees = $em->getRepository('AppBundle:Photo')->findPhotoPubliee($idUser);
+
+            $photo = $em->getRepository('AppBundle:Photo')->find($id);
+            $positionExistante = $photo->getPosition();
+                if ($positionExistante == 0){
+                    $em->remove($photo);
+                } else if($positionExistante != 0){
+                if ($positionExistante  == $nbPhotosPubliees[1] ){
+                    $em->remove($photo);
+                } else {
+                    $selectposition = $positionExistante + 1;
+                    $photosABouger = $em->getRepository('AppBundle:Photo')->findModifPosition($selectposition, $idUser);
+                    // var_dump($photosABouger);
+                    foreach ($photosABouger as $p) {
+                        $entiteP = $em->getRepository('AppBundle:Photo')->find($p['id']);
+                        $newPosition = $p['position'] - 1;
+                        $entiteP->setPosition($newPosition);
+                        $em->persist($entiteP);
+                    }
+                    $em->remove($photo);
+                }
+            }
+                $em->flush();
+
+            return $this->redirectToRoute('magalerie', array('page' => 1));   
+    }
 
 
     /**
