@@ -22,7 +22,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        
+        $em = $this->getDoctrine()->getManager();
         $session = $request->getSession();
 
 
@@ -43,7 +43,23 @@ class DefaultController extends Controller
             ? $this->get('security.csrf.token_manager')->getToken('authenticate')->getValue()
             : null;
    
-	    return $this->render('accueil/accueil.html.twig', array('csrf_token' => $csrfToken));
+
+
+        //galerie aleatoire
+       $listeUser = $em->getRepository('AppBundle:User')->findAll(); 
+
+       $listeUserAvecPhoto = [];
+
+       foreach ($listeUser as $user) {
+           if ($user->getPhotos()->isEmpty() == false){
+                $listeUserAvecPhoto[] = $user;
+           }
+       }
+       // dump($listeUserAvecPhoto);
+       //  exit;
+
+
+	    return $this->render('accueil/accueil.html.twig', array('csrf_token' => $csrfToken, 'listeUser' => $listeUser, 'listeUserAvecPhoto' => $listeUserAvecPhoto));
     }
 
 

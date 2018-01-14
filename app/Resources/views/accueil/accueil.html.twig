@@ -36,9 +36,19 @@
  
  {% block left %}
     {% if app.user %}
-        Bienvenue {{ app.user.username }}<br/>
+       <h3> Bienvenue {{ app.user.username }}</h3><br/>
     {% endif %}
-    Liste des utilisateurs        
+    Liste des utilisateurs<br/>
+    <div class="ui relaxed divided list">
+        {% for user in listeUser %}
+      <div class="item">
+        <i class="large user middle aligned icon"></i>
+        <div class="content">
+          <a class="header">{{user.username}}</a>
+        </div>
+      </div>
+       {% endfor %} 
+     </div>  
  	
 
  {% endblock %}
@@ -59,7 +69,18 @@
   {% endif %}
 
 Bienvenue
-
+<h3>Ma galerie publique</h3>
+    <div class="ui four column grid">
+        <div class="row">
+        {% for user in listeUserAvecPhoto|shuffle|slice(0,1) %}
+            {% for  photo in user.photos %}
+                <div class="column" style="text-align: -webkit-center; height: 280px; margin-bottom: 10px;" data-position="{{photo.position}}">
+                    <img class="ui large image" src="{{ asset(photo.webPath ) }}" style="width: auto; max-height: 240px;" />
+                </div>
+            {% endfor %}
+        {% endfor %}
+        </div>
+    </div>
 
 {% endblock %}
 

@@ -89,6 +89,12 @@ assetic:
     filters:
         cssrewrite: ~
 
+services:
+    twig.extension.text:
+        class: Twig_Extensions_Extension_Array
+        tags:
+            - { name: twig.extension }
+
 
 
 liip_imagine:
