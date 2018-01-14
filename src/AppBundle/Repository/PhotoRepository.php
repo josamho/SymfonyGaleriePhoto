@@ -81,4 +81,33 @@ class PhotoRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findUserAvecPhotoPubliee()
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('DISTINCT u.id')
+                ->from('AppBundle:Photo', 'p')
+                ->join('p.user', 'u')
+                ->where('p.user = u.id')
+                ->where('p.position > 0')
+                ->orderBy('p.position')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findPhotoPublieeDuRand($user)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('p')
+                ->from('AppBundle:Photo', 'p')
+                ->join('p.user', 'u')
+                ->andwhere('u.id = :user')
+                ->andwhere('p.position > 0')
+                ->setParameter('user', $user)
+                ->orderBy('p.position')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
 }
