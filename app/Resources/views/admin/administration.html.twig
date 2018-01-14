@@ -1,6 +1,5 @@
 {% extends 'base.html.twig' %}
 
-
 {% block menu %}
         <div class="ui secondary pointing teal menu">
             <div class="left menu">Galerie Photo</div>
@@ -27,61 +26,41 @@
                     <a href="{{ path('inscription') }} "><button class="ui olive button" type="button" id="inscription"><i class="user icon"></i> Inscription</button></a>
                     {# {{ app.user.username }} #}
                     {% endif %}
-                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                   {% if is_granted('ROLE_SUPER_ADMIN') %}
                     <a href="{{path('admin')}}"><button class="ui button">Administration</button></a>
-                   {% endif %}                    
+                   {% endif %}
+                    
                 </div>
             </div>
         </div>
 
 {% endblock %}
 
- {% block left %}
-    {% if app.user %}
-       <h3> Bienvenue {{ app.user.username }}</h3><br/>
-    {% endif %}
-    Liste des utilisateurs<br/>
+{% block left %}
+
+    
+ 	
+{% endblock %}
+
+
+ {% block body %}
     <div class="ui relaxed divided list">
         {% for user in listeUser %}
       <div class="item">
         <i class="large user middle aligned icon"></i>
         <div class="content">
-          <a href={{path('galerie_publique', {'username': user.username})}} class="header">{{user.username}}</a>
+        	{% if user.enabled == 1 %}
+            	<div style="color:#b5cc18;" class="header">{{user.username}}</div>
+            	<a href="{{path('supprimer_user', {'id' : user.id })}}"><button class="ui red button" style="position:relative; bottom:10px; left:80%;">Supprimer</button></a>
+        	{% elseif user.enabled == 0 %}
+        		<div style="color:#db2828;"  class="header">{{user.username}}</div>
+        		<a href="{{path('supprimer_user', {'id' : user.id })}}"><button class="ui red button" style="position:relative; bottom:10px; left:40%;">Supprimer</button></a>
+        		<a href="{{path('reactiver_user', {'id' : user.id })}}"><button class="ui olive button" style="position:relative; bottom:10px; left:80%;">Réactiver</button></a>
+            {% endif %}
         </div>
       </div>
        {% endfor %} 
-     </div>  
- 	
-
- {% endblock %}
-
-  {% block body %}
-{# 
-   {% if app.session.flashbag.peekAll()|length %}
-    <div class="ui segment">
-                {% for label, flashes in app.session.flashbag.all %}
-                  {% for flash in flashes %}
-                    <div class="messages {{ label }}">
-                      <p>{{ flash|raw }}</p>
-                    </div>
-                  {% endfor %}
-                {% endfor %}   
-    </div>
-  {% endif %} #}
-
-
-<h2>Galerie publique de {{username}}</h2>
-    <div class="ui four column grid">
-        <div class="row">
-          {# {{dump(photospubliques)}} #}
-            {% if photospubliques is empty %}<h3>Cet utilisateur n'a pas encore publié de photo.</h3>{% endif %}
-            {% for photo in photospubliques %}
-                <div class="column" style="text-align: -webkit-center; height: 280px; margin-bottom: 10px;" data-position="{{photo.position}}">
-                    <img class="ui large image" src="{{ asset(photo.webPath ) }}" style="width: auto; max-height: 240px;" />
-                </div>
-        {% endfor %}
-        </div>
-    </div>
+     </div> 
 
 {% endblock %}
 

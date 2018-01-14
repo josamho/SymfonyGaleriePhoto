@@ -368,6 +368,52 @@ class DefaultController extends Controller
 
     }
 
+    /**
+    * @Route("/administration", name="admin")
+    */
+    public function administrationAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $listeUser = $em->getRepository('AppBundle:User')->findAll();
+
+        return $this->render('admin/administration.html.twig' , array('listeUser' => $listeUser /* , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP */));
+    }
+
+    /**
+    * @Route("/supprimer/utilisateur/{id}", name="supprimer_user", requirements={"id" = "\d*"})
+    */
+    public function supprimerUtilisateurAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('AppBundle:User')->find($id);
+
+        
+        $em->remove($user);
+        $em->flush();
+
+        return $this->redirectToRoute('admin');   
+    }
+
+    /**
+    * @Route("/reactiver/utilisateur/{id}", name="reactiver_user", requirements={"id" = "\d*"})
+    */
+    public function reactiverUtilisateurAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('AppBundle:User')->find($id);
+
+        $user->setEnabled(1);
+
+        $em->persist($user);
+
+        $em->flush();
+
+        return $this->redirectToRoute('admin');   
+    }
+
 
     /**
      * @Route("/login", name="login")
