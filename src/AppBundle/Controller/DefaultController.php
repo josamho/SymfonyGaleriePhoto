@@ -55,11 +55,24 @@ class DefaultController extends Controller
                 $listeUserAvecPhoto[] = $user;
            }
        }
+
+       $test = $em->getRepository('AppBundle:Photo')->findUserAvecPhotoPubliee();
+       // var_dump($test);
+       shuffle($test);
+       $photosaleatoires = $em->getRepository('AppBundle:Photo')->findPhotoPublieeDuRand($test[0]['id']);
+       $useraleatoire = $em->getRepository('AppBundle:User')->find($test[0]['id']);
+       // var_dump($useraleatoire);
+
+       // exit;
+
+
        // dump($listeUserAvecPhoto);
+        
+
+       //  $test[] = array_rand($listeUserAvecPhoto);
+       //  var_dump($test);
        //  exit;
-
-
-	    return $this->render('accueil/accueil.html.twig', array('csrf_token' => $csrfToken, 'listeUser' => $listeUser, 'listeUserAvecPhoto' => $listeUserAvecPhoto));
+	    return $this->render('accueil/accueil.html.twig', array('csrf_token' => $csrfToken, 'listeUser' => $listeUser, 'photosaleatoires' => $photosaleatoires,  'useraleatoire' => $useraleatoire));
     }
 
 
@@ -328,6 +341,31 @@ class DefaultController extends Controller
                 $em->flush();
 
             return $this->redirectToRoute('magalerie', array('page' => 1));   
+    }
+
+
+    /**
+     * @Route("/galeriepublique/{username}", name="galerie_publique", requirements={"username" = "\w*"})
+     */
+    public function galeriePubliqueAction($username, Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+
+        $user = $this->getUser();
+
+        $idUser = $user->getId();
+
+        $listeUser = $em->getRepository('AppBundle:User')->findAll();
+
+        $usergalerie = $em->getRepository('AppBundle:User')->findOneBy(array('username' => $username));
+
+        $photospubliques = $em->getRepository('AppBundle:Photo')->findPhotoPublieeDuRand($usergalerie->getId());
+
+
+        return $this->render('profil/galerie_public.html.twig', array('photospubliques' => $photospubliques, 'username' => $username, 'listeUser' => $listeUser /* , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP */));
+
     }
 
 
