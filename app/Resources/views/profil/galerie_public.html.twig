@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+
+{% block menu %}
+        <div class="ui secondary pointing teal menu">
+            <div class="left menu">Galerie Photo</div>
+            <div class="right menu">
+                <div class="ui item"> 
+                    {#  truc de connexion #}
+                    {% if app.user %}
+                    <a href="{{ path('magalerie', {'page': '1'}) }} "><button class="ui olive button" type="button" id="inscription"><i class="user icon"></i> Ma galerie photo</button> </a>
+                    <span style=" width:10px;"></span>
+                    <a href="{{ path('fos_user_security_logout') }} "><button class="ui red button" id="inscription"><i class="shutdown icon"></i> Déconnection</button></a>
+                    {% else %}
+                    <form action="{{ path('fos_user_security_check') }}" method="post">
+                        <input type="hidden" name="_csrf_token" value="{{csrf_token}}">
+                        <span class="ui input">
+                        <input type="text" id="username" name="_username" class="form-control" required="required">
+                        <span>
+                        <span class="ui input">
+                        <input type="password" id="password" name="_password" class="form-control" required="required">
+                        </span>
+                        <input type="submit" class="ui olive button" value="Connexion">
+                    </form>
+                     <span style=" width:10px;"></span>
+             {#    <a href="{{ path('logout') }} "class="ui item"> #}
+                    <a href="{{ path('inscription') }} "><button class="ui olive button" type="button" id="inscription"><i class="user icon"></i> Inscription</button></a>
+                    {# {{ app.user.username }} #}
+                    {% endif %}
+                   
+                    
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
+
+ {% block left %}
+    {% if app.user %}
+       <h3> Bienvenue {{ app.user.username }}</h3><br/>
+    {% endif %}
+    Liste des utilisateurs<br/>
+    <div class="ui relaxed divided list">
+        {% for user in listeUser %}
+      <div class="item">
+        <i class="large user middle aligned icon"></i>
+        <div class="content">
+          <a href={{path('galerie_publique', {'username': user.username})}} class="header">{{user.username}}</a>
+        </div>
+      </div>
+       {% endfor %} 
+     </div>  
+ 	
+
+ {% endblock %}
+
+  {% block body %}
+{# 
+   {% if app.session.flashbag.peekAll()|length %}
+    <div class="ui segment">
+                {% for label, flashes in app.session.flashbag.all %}
+                  {% for flash in flashes %}
+                    <div class="messages {{ label }}">
+                      <p>{{ flash|raw }}</p>
+                    </div>
+                  {% endfor %}
+                {% endfor %}   
+    </div>
+  {% endif %} #}
+
+
+<h2>Galerie publique de {{username}}</h2>
+    <div class="ui four column grid">
+        <div class="row">
+          {# {{dump(photospubliques)}} #}
+            {% if photospubliques is empty %}<h3>Cet utilisateur n'a pas encore publié de photo.</h3>{% endif %}
+            {% for photo in photospubliques %}
+                <div class="column" style="text-align: -webkit-center; height: 280px; margin-bottom: 10px;" data-position="{{photo.position}}">
+                    <img class="ui large image" src="{{ asset(photo.webPath ) }}" style="width: auto; max-height: 240px;" />
+                </div>
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
+
+{% endblock %}
