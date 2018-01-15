@@ -18,12 +18,11 @@
 {% endblock %}
  
 {% block left %}
-	Actions   <br/>    
+	Actions  <br/>    
 	<button class="ui olive button" type="button" id="addphoto"><i class="plus icon"></i>Ajout photo</button>
 
 {% endblock %}
 
- 
 {% block body %}
 
 	{% if app.session.flashbag.peekAll()|length %}
@@ -93,14 +92,16 @@
         </div>
     </div>
 
-    <ul class="pagination">
+    <div class="pagination">
   {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+  <div class="flex-container">
         {% for p in range(1, nbPages) %}
-            <li{% if p == page %} class="active"{% endif %}>
+            <div style="height: 30px; width: 30px; text-align: center; border: #b5cc18; background-color: #b5cc18; border-style: solid; border-width: 2px; border-radius: 7px; padding-top: 3px;" {% if p == page %} class="active"{% endif %}>
                 <a href="{{ path('magalerie', {'page': p}) }}">{{ p }}</a>
-            </li>
+            </div   >
         {% endfor %}
-    </ul>
+    </div>
+    </div>
 
 {% endblock %}
 

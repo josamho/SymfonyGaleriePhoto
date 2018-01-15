@@ -220,10 +220,10 @@ class DefaultController extends Controller
             }
             $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
 
-            unset($photo);
-            unset($form);
-            $photo = new Photo;
-            $form = $this->get('form.factory')->create(PhotoType::class, $photo);  
+            // unset($photo);
+            // unset($form);
+            // $photo = new Photo;
+            // $form = $this->get('form.factory')->create(PhotoType::class, $photo);  
             $flagPhoto = 1;
             // return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP, 'flagPhoto' => 1));
         }
