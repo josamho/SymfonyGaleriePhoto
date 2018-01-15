@@ -15,3 +15,6 @@ adminlogin:
 
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.yaml"
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

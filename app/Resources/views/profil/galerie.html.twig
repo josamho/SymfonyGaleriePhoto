@@ -114,31 +114,44 @@
 
 
 $('#addphoto').click(function(){
-	$('.ui.modal#ajout')
- .modal('show')
- ;
+    $('.ui.modal#ajout')
+        .modal('show')
+    ;
 	// alert('click');
 
 });
 
-$('.buttonSuppression').click(function(){
+$('.buttonSuppression').click(function(e){
+     e.preventDefault();
     $('#suppresion'+this.id)
     .modal('show');
 
     var idphoto = this.id;
 });
 
-$('#suppresion').click(function(){
+flagPhoto = {{flagPhoto}};
+
+if (flagPhoto == 1) {
+    $('.ui.modal#ajout')
+        .modal('show')
+    ;
+}
+
+// $('#suppresion').click(function(){
   
-})
+// })
 
 
-$('.positionSelect').change(function(){
+$('.positionSelect').change(function(e){
+    e.preventDefault();
     var idphoto = this.id;
     var positionphoto = $(this).val();
     console.log($(this).val());
     var page = {{page}};
-
+    // var url = Routing.generate('magalerie', {
+    //     'page': '1'
+    // });
+    var route = "{{ path('magalerie', {'page': '1'})|escape('js') }}";
     // var route = Routing.generate('publication_photo');
 /*
     $.ajax({
@@ -173,8 +186,8 @@ $('.positionSelect').change(function(){
                 })
                 .done(function( response ){
                     console.log('update ok');
-                    // document.location.href = Routing.generate('magalerie', { page: page });
-                    document.location.reload(true);
+                    document.location.href = route;
+                    // document.location.reload(true);
                 })
                 .fail(function() {
                 /*console.log("error");*/
