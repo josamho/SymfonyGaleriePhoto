@@ -41,6 +41,8 @@
 	<div class="ui modal" id="ajout">
 		<div class="header">Ajout d'une photo</div>
 		<div class="content">
+            <div class="error">{{ form_errors(form) }}</div>
+
 			{{form_start(form)}}
 			{{form_end(form)}}
 		</div>
