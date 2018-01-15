@@ -185,9 +185,14 @@ class DefaultController extends Controller
 
         $form = $this->get('form.factory')->create(PhotoType::class, $photo);  
 
-        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+        // var_dump(   $form->getErrors()  ) ; exit;
+
+        if ($request->isMethod('POST')){ 
+            if ( $form->handleRequest($request)->isValid()) {
 
           // $photo->upload();
+
+
 
           $em = $this->getDoctrine()->getManager();
           $photo->setPosition(0);
@@ -203,12 +208,17 @@ class DefaultController extends Controller
           $em->persist($user);
           $em->flush();
 
+        unset($photo);
+        unset($form);
+
           $request->getSession()->getFlashBag()->add('notice', 'Photo bien ajoutée.');
 
           return $this->redirectToRoute('magalerie', array('page' => 1)); 
 
-        } else if ( !$form->handleRequest($request)->isValid()) {
-            // $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
+        // } else if ( !$form->handleRequest($request)->isValid()) {
+        //
+             }
+            $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
         }
 
         return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP));
