@@ -154,7 +154,7 @@ class DefaultController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-
+        $flagPhoto = 0;
 
         $user = $this->getUser();
 
@@ -217,11 +217,18 @@ class DefaultController extends Controller
 
         // } else if ( !$form->handleRequest($request)->isValid()) {
         //
-             }
+            }
             $request->getSession()->getFlashBag()->add('error', 'Fichier non valide ! Veuillez vérifier que la taille de la photo ne dépasse pas 5Mo et que le format est bien Jpeg ou png.');
+
+            // unset($photo);
+            // unset($form);
+            // $photo = new Photo;
+            // $form = $this->get('form.factory')->create(PhotoType::class, $photo);  
+            $flagPhoto = 1;
+            // return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP, 'flagPhoto' => 1));
         }
 
-        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP));
+        return $this->render('profil/galerie.html.twig', array('form' => $form->createView(), 'photos' => $photos , 'nbPages' => $nbPages, 'page' => $page, 'nbP' => $nbP, 'flagPhoto' => $flagPhoto));
     }
 
 
@@ -362,10 +369,11 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        
 
         $user = $this->getUser();
 
-        $idUser = $user->getId();
+        // $idUser = $user->getId();
 
         $listeUser = $em->getRepository('AppBundle:User')->findAll();
 

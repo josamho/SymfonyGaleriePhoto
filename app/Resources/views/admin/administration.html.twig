@@ -2,7 +2,7 @@
 
 {% block menu %}
         <div class="ui secondary pointing teal menu">
-            <div class="left menu">Galerie Photo</div>
+            <div class="left menu"><h1>Galerie Photo</h1></div>
             <div class="right menu">
                 <div class="ui item"> 
                     {#  truc de connexion #}
@@ -46,6 +46,7 @@
  {% block body %}
     <div class="ui relaxed divided list">
         {% for user in listeUser %}
+            {% if user.username != app.user.username %}
       <div class="item">
         <i class="large user middle aligned icon"></i>
         <div class="content">
@@ -59,6 +60,7 @@
             {% endif %}
         </div>
       </div>
+      {% endif %}
        {% endfor %} 
      </div> 
 
