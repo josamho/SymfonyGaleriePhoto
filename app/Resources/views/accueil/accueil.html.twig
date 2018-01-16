@@ -14,10 +14,10 @@
                     <form action="{{ path('fos_user_security_check') }}" method="post">
                         <input type="hidden" name="_csrf_token" value="{{csrf_token}}">
                         <span class="ui input">
-                        <input type="text" id="username" name="_username" class="form-control" required="required">
+                        <input type="text" id="username" name="_username" placeholder="E-mail" class="form-control" required="required">
                         <span>
                         <span class="ui input">
-                        <input type="password" id="password" name="_password" class="form-control" required="required">
+                        <input type="password" id="password" name="_password" placeholder="Mot de passe" class="form-control" required="required">
                         </span>
                         <input type="submit" class="ui olive button" value="Connexion">
                     </form>
