@@ -14,22 +14,16 @@
                     <span style=" width:10px;"></span>
                     <a href="{{ path('fos_user_security_logout') }} "><button class="ui red button" id="inscription"><i class="shutdown icon"></i> Déconnection</button></a>
                     {% else %}
-                    <form action="{{ path('fos_user_security_check') }}" method="post">
-                        <input type="hidden" name="_csrf_token" value="{{csrf_token}}">
-                        <span class="ui input">
-                        <input type="text" id="username" name="_username" class="form-control" required="required">
-                        <span>
-                        <span class="ui input">
-                        <input type="password" id="password" name="_password" class="form-control" required="required">
-                        </span>
-                        <input type="submit" class="ui olive button" value="Connexion">
-                    </form>
+                      <a href="{{ path('homepage') }} "><button class="ui olive button" type="button" id="homepage"><i class="user icon"></i> Accueil</button> </a>
+                    <span style=" width:10px;"></span>
                      <span style=" width:10px;"></span>
              {#    <a href="{{ path('logout') }} "class="ui item"> #}
                     <a href="{{ path('inscription') }} "><button class="ui olive button" type="button" id="inscription"><i class="user icon"></i> Inscription</button></a>
                     {# {{ app.user.username }} #}
                     {% endif %}
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
+                      <a href="{{ path('homepage') }} "><button class="ui olive button" type="button" id="homepage"><i class="user icon"></i> Accueil</button> </a>
+                      <span style=" width:10px;"></span>
                       <span style=" width:10px;"></span>
                     <a href="{{path('admin')}}"><button class="ui button">Administration</button></a>
                    {% endif %}                    

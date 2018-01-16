@@ -369,10 +369,11 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        
 
         $user = $this->getUser();
 
-        $idUser = $user->getId();
+        // $idUser = $user->getId();
 
         $listeUser = $em->getRepository('AppBundle:User')->findAll();
 
